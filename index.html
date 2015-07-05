@@ -104,9 +104,9 @@
             </a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li><a href="#">Про проект</a></li>
-                <li><a href="#">Автори</a></li>
+          <ul class="nav navbar-nav">
+              <li><a href="#" data-placement="bottom" data-toggle="popover" data-content="про проект">Про проект</a></li>
+              <li><a href="#" data-placement="bottom" data-toggle="popover" data-content="автори">Автори</a></li>
             </ul>
         </div>
     </div>
@@ -131,6 +131,18 @@
 <!-- /container -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
+<script>
+  $(function () {
+    $('[data-toggle="popover"]').popover()
+  });
+
+  $('body').on('click', function (e) {
+    if ($(e.target).data('toggle') !== 'popover'
+        && $(e.target).parents('.popover.in').length === 0) {
+        $('[data-toggle="popover"]').popover('hide');
+    }
+  });
+</script>
 
 <script src="js/vendor/bootstrap.min.js"></script>
 

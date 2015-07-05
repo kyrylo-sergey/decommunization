@@ -39,3 +39,7 @@ html, body {
     padding-left: 8px;
     padding-right: 11px;
 }
+
+.popover {
+    width: 400px;
+}
