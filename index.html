@@ -41,28 +41,43 @@
         function renderStreets() {
             var list = $('#list');
 
-            var append = function(name, type) {
+            var append = function(name, ident,  type) {
                 var item = $('<li>' + name + '</li>').on('click', function() {
                     codeAddress(name  + ', Харків');
                 });
+                item.data('ident', ident);
+                item.data('type', type);
                 list.find('#' + type + ' ul').append(item);
             };
 
             $.each(streets, function(idx, street) {
-                append(street.ukr_type + ' ' + street.ukr_name, 'streets');
+                var full = street.ukr_type + ' ' + street.ukr_name;
+                append(full, full, 'streets');
             });
             $.each(districts, function(idx, distr) {
-                append(distr.ukr_name + ' район', 'districts');
+                append(distr.ukr_name + ' район', distr.ukr_name,  'districts');
             });
             $.each(metros, function(idx, m) {
-                append('ст. м. ' + m.ukr_name, 'metros');
+                append('ст. м. ' + m.ukr_name, m.ukr_name, 'metros');
             });
             $.each(parks, function(idx, park) {
-                append('парк ' + park.ukr_name, 'parks');
+                append('парк ' + park.ukr_name, park.ukr_name, 'parks');
             });
         }
 
         function initialize() {
+            var description = $('#description');
+            var showDescription= function(ident, type) {
+                var d = $.grep(all[type], function(item) {
+                    if (item.ukr_name && item.ukr_type) {
+                        return item.ukr_type + ' ' + item.ukr_name == ident;
+                    } else if (item.ukr_name && item.ukr_name !== 'null') {
+                        return item.ukr_name == ident;
+                    } else return false;
+                })[0];
+                description.html('<p class="well">' + d.description + '</p>');
+            };
+
             geocoder = new google.maps.Geocoder();
             var mapOptions = {
                 center: {lat: 50.004444, lng: 36.231389},
@@ -74,6 +89,7 @@
             $('#list .tab-pane ul').on('click', 'li', function() {
                 $('#list .tab-pane ul li.selected').removeClass('selected');
                 $(this).addClass('selected');
+                showDescription($(this).data('ident'), $(this).data('type'));
             });
         }
 
@@ -137,21 +153,24 @@
 </nav>
 
 <div class="container map">
-    <div class="col-md-4" style="height: 100%;">
-        <div id="list">
-            <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="#streets" id="streets-tab" aria-controls="streets" role="tab" data-toggle="tab">Вулиці</a></li>
-                <li role="presentation"><a href="#districts" id="districts-tab" aria-controls="disctricts" role="tab" data-toggle="tab">Райони</a></li>
-                <li role="presentation"><a href="#metros" id="metro-tab" aria-controls="metros" role="tab" data-toggle="tab">Метро</a></li>
-                <li role="presentation"><a href="#parks" id="parks-tab" aria-controls="parks" role="tab" data-toggle="tab">Парки</a></li>
-            </ul>
-            <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="streets"><ul></ul></div>
-                <div role="tabpanel" class="tab-pane" id="districts"><ul></ul></div>
-                <div role="tabpanel" class="tab-pane" id="metros"><ul></ul></div>
-                <div role="tabpanel" class="tab-pane" id="parks"><ul></ul></div>
+    <div class="col-md-4" style="height: 50%;">
+        <div class="row" style="height: 100%;">
+            <div id="list">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#streets" id="streets-tab" aria-controls="streets" role="tab" data-toggle="tab">Вулиці</a></li>
+                    <li role="presentation"><a href="#districts" id="districts-tab" aria-controls="disctricts" role="tab" data-toggle="tab">Райони</a></li>
+                    <li role="presentation"><a href="#metros" id="metro-tab" aria-controls="metros" role="tab" data-toggle="tab">Метро</a></li>
+                    <li role="presentation"><a href="#parks" id="parks-tab" aria-controls="parks" role="tab" data-toggle="tab">Парки</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="streets"><ul></ul></div>
+                    <div role="tabpanel" class="tab-pane" id="districts"><ul></ul></div>
+                    <div role="tabpanel" class="tab-pane" id="metros"><ul></ul></div>
+                    <div role="tabpanel" class="tab-pane" id="parks"><ul></ul></div>
+                </div>
             </div>
         </div>
+        <div class="row" id="description"></div>
     </div>
     <div class="col-md-8 map-col">
       <div class="row map-row">

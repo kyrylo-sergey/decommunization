@@ -90,3 +90,5 @@ html, body {
 .nav-tabs>li.active>a:focus {
     border: 1px solid #BBB;
 }
+
+#description .well { margin: 10px; }
