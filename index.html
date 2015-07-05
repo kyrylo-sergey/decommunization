@@ -108,8 +108,10 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-              <li><a href="#" data-placement="bottom" data-toggle="popover" data-content="про проект">Про проект</a></li>
-              <li><a href="#" data-placement="bottom" data-toggle="popover" data-content="автори">Автори</a></li>
+            <li><a href="#" data-placement="bottom" data-toggle="popover"
+                   data-content="15 травня 2015 року президент України Петро Порошенко підписав <a href='http://zakon4.rada.gov.ua/laws/show/317-19'>закони, якими забороняється радянська символіка</a>.<br/><br/><a href='https://www.facebook.com/groups/704786309633508/'>Харківська топонімічна група</a> діючи у рамках цих законів запропонувала список топонімів міста Харкова, які підлягають зміні.<br/><br/>На цьому сайті приведений повний список запропонованих змін.">
+                Про проект</a></li>
+              <li><a href="#" data-placement="bottom" data-toggle="popover" data-content="Автори проекту: <a href='http://vk.com/id11662509'>Сергій Перерва</a> та <a href='http://kyrylo.org'>Кирило Сілін</a>.<br/><br/>Автори не несуть відповідальності за список топонімів, запропонованих до по зміни.<br/><br/>Цей <a href='https://github.com/kyrylo-sergey/decommunization'>проект</a> є проектом з відкритим програмним забезпеченням.">Автори</a></li>
             </ul>
         </div>
     </div>
@@ -145,7 +147,7 @@
 <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
 <script>
   $(function () {
-    $('[data-toggle="popover"]').popover()
+    $('[data-toggle="popover"]').popover({html: true})
   });
 
   $('body').on('click', function (e) {
