@@ -34,7 +34,7 @@ html, body {
     padding-left: 15px;
 }
 
-#list .tab-pane { overflow: scroll; height: 100%; }
+#list .tab-pane { overflow: auto; height: 100%; }
 
 #list .tab-content { height: 90%; }
 
