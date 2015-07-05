@@ -68,3 +68,25 @@ html, body {
 .popover {
     width: 400px;
 }
+
+#streets-tab {
+    background-color: #FBFFE4;
+}
+
+#districts-tab {
+    background-color: #E4FFEA;
+}
+
+#metro-tab {
+    background-color: #E4F6FF;
+}
+
+#parks-tab {
+    background-color: #EAE4FF;
+}
+
+.nav-tabs>li.active>a,
+.nav-tabs>li.active>a:hover,
+.nav-tabs>li.active>a:focus {
+    border: 1px solid #BBB;
+}

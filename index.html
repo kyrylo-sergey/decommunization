@@ -82,9 +82,28 @@
                 if (status == google.maps.GeocoderStatus.OK) {
                     map.setCenter(results[0].geometry.location);
                     if (marker) { marker.setMap(null); }
+
+                    var selectedTab = $('.nav-tabs').find('li.active a').attr('id');
+                    var markerIcon = null;
+
+                    switch(selectedTab) {
+                        case 'streets-tab':
+                            markerIcon = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png';
+                            break;
+                        case 'districts-tab':
+                            markerIcon = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
+                            break;
+                        case 'metro-tab':
+                            markerIcon = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+                            break;
+                        case 'parks-tab':
+                            markerIcon = 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png';
+                            break;
+                    }
                     marker = new google.maps.Marker({
                         map: map,
-                        position: results[0].geometry.location
+                        position: results[0].geometry.location,
+                        icon: markerIcon
                     });
                 } else {
                     alert("Geocode was not successful for the following reason: " + status);
@@ -121,10 +140,10 @@
     <div class="col-md-4" style="height: 100%;">
         <div id="list">
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="#streets" aria-controls="streets" role="tab" data-toggle="tab">Вулиці</a></li>
-                <li role="presentation"><a href="#districts" aria-controls="disctricts" role="tab" data-toggle="tab">Райони</a></li>
-                <li role="presentation"><a href="#metros" aria-controls="metros" role="tab" data-toggle="tab">Метро</a></li>
-                <li role="presentation"><a href="#parks" aria-controls="parks" role="tab" data-toggle="tab">Парки</a></li>
+                <li role="presentation" class="active"><a href="#streets" id="streets-tab" aria-controls="streets" role="tab" data-toggle="tab">Вулиці</a></li>
+                <li role="presentation"><a href="#districts" id="districts-tab" aria-controls="disctricts" role="tab" data-toggle="tab">Райони</a></li>
+                <li role="presentation"><a href="#metros" id="metro-tab" aria-controls="metros" role="tab" data-toggle="tab">Метро</a></li>
+                <li role="presentation"><a href="#parks" id="parks-tab" aria-controls="parks" role="tab" data-toggle="tab">Парки</a></li>
             </ul>
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="streets"><ul></ul></div>
