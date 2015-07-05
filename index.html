@@ -39,29 +39,27 @@
         var map, geocoder, marker;
 
         function renderStreets() {
-            console.log(streets);
-            var list = $('<ul></ul>');
+            var list = $('#list');
 
-            var append = function(name) {
+            var append = function(name, type) {
                 var item = $('<li>' + name + '</li>').on('click', function() {
                     codeAddress(name  + ', Харків');
                 });
-                list.append(item);
+                list.find('#' + type + ' ul').append(item);
             };
 
             $.each(streets, function(idx, street) {
-                append(street.ukr_type + ' ' + street.ukr_name);
+                append(street.ukr_type + ' ' + street.ukr_name, 'streets');
             });
             $.each(districts, function(idx, distr) {
-                append(distr.ukr_name + ' район');
+                append(distr.ukr_name + ' район', 'districts');
             });
             $.each(metros, function(idx, m) {
-                append('ст. м. ' + m.ukr_name);
+                append('ст. м. ' + m.ukr_name, 'metros');
             });
             $.each(parks, function(idx, park) {
-                append('парк ' + park.ukr_name);
+                append('парк ' + park.ukr_name, 'parks');
             });
-            $('#list').append(list);
         }
 
         function initialize() {
@@ -72,6 +70,11 @@
             };
             map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
             renderStreets();
+
+            $('#list .tab-pane ul').on('click', 'li', function() {
+                $('#list .tab-pane ul li.selected').removeClass('selected');
+                $(this).addClass('selected');
+            });
         }
 
         function codeAddress(address) {
@@ -114,10 +117,19 @@
 
 <div class="container map">
     <div class="col-md-4" style="height: 100%;">
-        <div id="list" style="overflow: scroll; height: 100%">
-            <label for="address">Address</label>
-            <input type="text" id="address" name="address">
-            <button onclick="codeAddress(this.value)">Geocode</button>
+        <div id="list">
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#streets" aria-controls="streets" role="tab" data-toggle="tab">Вулиці</a></li>
+                <li role="presentation"><a href="#districts" aria-controls="disctricts" role="tab" data-toggle="tab">Райони</a></li>
+                <li role="presentation"><a href="#metros" aria-controls="metros" role="tab" data-toggle="tab">Метро</a></li>
+                <li role="presentation"><a href="#parks" aria-controls="parks" role="tab" data-toggle="tab">Парки</a></li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="streets"><ul></ul></div>
+                <div role="tabpanel" class="tab-pane" id="districts"><ul></ul></div>
+                <div role="tabpanel" class="tab-pane" id="metros"><ul></ul></div>
+                <div role="tabpanel" class="tab-pane" id="parks"><ul></ul></div>
+            </div>
         </div>
     </div>
     <div class="col-md-8 map-col">
