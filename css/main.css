@@ -26,7 +26,7 @@ html, body {
 #list { height: 100%; }
 
 
-#list ul li:hover {
+#list .tab-content ul li:hover {
     cursor: pointer;
     background-color: #969696;
     color: white;
