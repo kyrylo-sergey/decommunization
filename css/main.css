@@ -26,7 +26,13 @@ html, body {
 #list { height: 100%; }
 
 
-#list ul li:hover { cursor: pointer; }
+#list ul li:hover {
+    cursor: pointer;
+    background-color: #969696;
+    color: white;
+    border-radius: 2px;
+    padding-left: 15px;
+}
 
 #list .tab-pane { overflow: scroll; height: 100%; }
 
