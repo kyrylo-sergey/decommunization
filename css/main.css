@@ -22,4 +22,20 @@ html, body {
     margin: 0;
     padding: 0;
 }
+
 #list ul li:hover { cursor: pointer; }
+
+.navbar-brand img {
+    float: left;
+    position: relative;
+}
+
+#ussr {
+    top: -13px;
+}
+
+#ukraine {
+    top: -6px;
+    padding-left: 8px;
+    padding-right: 11px;
+}
