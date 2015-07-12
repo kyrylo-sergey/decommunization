@@ -92,10 +92,10 @@ html, body {
 }
 
 .description {
-    margin-top: 20px;
+    margin-top: 140px;
 }
 
-#list {
+#list .tab-pane {
     border-bottom: 2px solid grey;
 }
 
