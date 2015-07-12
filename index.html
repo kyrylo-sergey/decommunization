@@ -111,26 +111,28 @@
 
         function codeAddress(address, full) {
             $.ajax({
-                        url: 'http://nominatim.openstreetmap.org/search',
-                        type: 'get',
-                        data: {
-                            street: address.replace('вул.', 'ул'),
-                            city: 'Харьков',
-                            country: 'Украина',
-                            format: 'json',
-                            polygon_geojson: 1
-                        }
-                    }).done(function (data) {
-                      var coordinates = data.map(function(obj) { return obj.geojson.coordinates; });
+                url: 'http://nominatim.openstreetmap.org/search',
+                type: 'get',
+                data: {
+                    street: address.replace('вул.', 'ул'),
+                    city: 'Харьков',
+                    country: 'Украина',
+                    format: 'json',
+                    polygon_geojson: 1
+                }
+            }).done(function (data) {
+                var coordinates = data.map(function(obj) { return obj.geojson.coordinates; });
 
-                      if (streetPath !== undefined) {
-                        streetPath.setMap(null);
-                      }
-
-                      coordinates.forEach(function(piece) {
-                        drawStreetPiece(piece, map);
-                      });
-                    });
+                if (streetPath !== undefined) {
+                    streetPath.setMap(null);
+                }
+                if (!coordinates.length) {
+                    console.log('No data from OSM service for ' + address);
+                }
+                coordinates.forEach(function(piece) {
+                    drawStreetPiece(piece, map);
+                });
+            });
 
             geocoder.geocode( { 'address': full}, function(results, status) {
                 if (status == google.maps.GeocoderStatus.OK) {
