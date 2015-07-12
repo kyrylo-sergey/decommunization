@@ -65,14 +65,10 @@
             });
         }
 
-        function drawStreet(coordinates, map) {
+        function drawStreetPiece(coordinates, map) {
           var latlngs = coordinates.map(function(pair) {
             return new google.maps.LatLng(pair[1], pair[0]);
           });
-
-          if (streetPath !== undefined) {
-            streetPath.setMap(null);
-          }
 
           streetPath = new google.maps.Polyline({
             path: latlngs,
@@ -125,10 +121,15 @@
                             polygon_geojson: 1
                         }
                     }).done(function (data) {
-                        var coordinates = data.map(function(obj) { return obj.geojson.coordinates; });
-                        coordinates.forEach(function(piece) {
-                          drawStreet(piece, map);
-                        });
+                      var coordinates = data.map(function(obj) { return obj.geojson.coordinates; });
+
+                      if (streetPath !== undefined) {
+                        streetPath.setMap(null);
+                      }
+
+                      coordinates.forEach(function(piece) {
+                        drawStreetPiece(piece, map);
+                      });
                     });
 
             geocoder.geocode( { 'address': full}, function(results, status) {
