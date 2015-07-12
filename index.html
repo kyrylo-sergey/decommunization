@@ -86,7 +86,7 @@
             var showDescription= function(ident, type) {
                 description.html('');
                 var d = $.grep(all[type], function(item) {
-                    if (item.ukr_name && item.ukr_type) {
+                    if (item.ukr_name) {
                         return (item.ukr_type + ' ' + item.ukr_name == ident)
                                 || item.ukr_name == ident;
                     } else return false;
