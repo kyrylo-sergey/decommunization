@@ -65,7 +65,7 @@
              });
          }
 
-         function drawStreetPiece(coordinates, map) {
+         function drawStreet(coordinates, map) {
              var latlngs = coordinates.map(function(pair) {
                  return new google.maps.LatLng(pair[1], pair[0]);
              });
@@ -127,30 +127,18 @@
                      polygon_geojson: 1
                  }
              }).done(function (data) {
-                 var coordinates = data.map(function(obj) { return obj.geojson.coordinates; });
-                 if (!coordinates.length) {
+                 if (data.length === 0) {
                      console.log('No data from OSM service for ' + address);
+                 } else {
+                     var coordinates = data.filter(function(c) {
+                         return c.class === 'highway' && c.type === 'tertiary' || c.type === 'residential';
+                     }).map(function(street) {
+                         return street.geojson.coordinates;
+                     });
+                     var mergedCoords = [].concat.apply([], coordinates);
+                     removePath();
+                     drawStreet(mergedCoords, map);
                  }
-                 removePath();
-                 var merged = [].concat.apply([], coordinates);
-                 var nonarrays = merged.filter(function(tuple) {
-                     return !Array.isArray(tuple);
-                 });
-
-                 coords = merged.filter(function(n) {
-                     return nonarrays.indexOf(n) == -1
-                 });
-                 debugger;
-                 var n = 2;
-                 for (var i = 0; i < nonarrays.length; i += n) {
-                     coords.concat([nonarrays[n], nonarrays[n+1]]);
-                 }
-
-
-
-                 coordinates.forEach(function(piece) {
-                     drawStreetPiece(piece, map);
-                 });
              });
 
              geocoder.geocode( { 'address': full}, function(results, status) {
