@@ -68,6 +68,7 @@
         function initialize() {
             var description = $('#description');
             var showDescription= function(ident, type) {
+                description.html('');
                 var d = $.grep(all[type], function(item) {
                     if (item.ukr_name && item.ukr_type) {
                         return item.ukr_type + ' ' + item.ukr_name == ident;
@@ -75,7 +76,7 @@
                         return item.ukr_name == ident;
                     } else return false;
                 })[0];
-                description.html('<p class="well">' + d.description + '</p>');
+                description.html('<h3>Причина</h3><p class="well">' + d.description + '</p>');
             };
 
             geocoder = new google.maps.Geocoder();
@@ -170,8 +171,7 @@
                 </div>
             </div>
         </div>
-        <div class="row" style="margin-top: 15px;">
-            <h3>Причина</h3>
+        <div class="row">
             <div id="description">
             </div>
         </div>

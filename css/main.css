@@ -91,4 +91,13 @@ html, body {
     border: 1px solid #BBB;
 }
 
+.description {
+    margin-top: 20px;
+}
+
+#list {
+    border-bottom: 2px solid grey;
+}
+
 #description .well { margin: 10px; }
+
