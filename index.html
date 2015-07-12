@@ -36,7 +36,7 @@
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBKSYeg17izEC5BS5TTcASixUrrfV2pTqA">
     </script>
     <script type="text/javascript">
-        var map, geocoder, marker;
+        var map, geocoder, marker, streetPath;
 
         function renderStreets() {
             var list = $('#list');
@@ -70,7 +70,11 @@
             return new google.maps.LatLng(pair[1], pair[0]);
           });
 
-          var streetPath = new google.maps.Polyline({
+          if (streetPath !== undefined) {
+            streetPath.setMap(null);
+          }
+
+          streetPath = new google.maps.Polyline({
             path: latlngs,
             geodesic: true,
             strokeColor: '#3EB1E4',
