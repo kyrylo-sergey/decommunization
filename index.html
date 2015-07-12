@@ -87,9 +87,8 @@
                 description.html('');
                 var d = $.grep(all[type], function(item) {
                     if (item.ukr_name && item.ukr_type) {
-                        return item.ukr_type + ' ' + item.ukr_name == ident;
-                    } else if (item.ukr_name && item.ukr_name !== 'null') {
-                        return item.ukr_name == ident;
+                        return (item.ukr_type + ' ' + item.ukr_name == ident)
+                                || item.ukr_name == ident;
                     } else return false;
                 })[0];
                 description.html('<h3>Причина</h3><p class="well">' + d.description + '</p>');
