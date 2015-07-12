@@ -34,7 +34,12 @@ html, body {
     padding-left: 15px;
 }
 
-#list .tab-pane { overflow: auto; height: 100%; }
+#list .tab-pane {
+    overflow: auto;
+    height: 100%;
+    float: left;
+    width: 100%;
+}
 
 #list .tab-content { height: 90%; }
 
@@ -100,4 +105,3 @@ html, body {
 }
 
 #description .well { margin: 10px; }
-
