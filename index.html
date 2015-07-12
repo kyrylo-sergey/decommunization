@@ -65,6 +65,22 @@
             });
         }
 
+        function drawStreet(coordinates, map) {
+          var latlngs = coordinates.map(function(pair) {
+            return new google.maps.LatLng(pair[1], pair[0]);
+          });
+
+          var streetPath = new google.maps.Polyline({
+            path: latlngs,
+            geodesic: true,
+            strokeColor: '#FF0000',
+            strokeOpacity: 1.0,
+            strokeWeight: 2
+          });
+
+          streetPath.setMap(map);
+        }
+
         function initialize() {
             var description = $('#description');
             var showDescription= function(ident, type) {
