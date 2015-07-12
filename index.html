@@ -73,9 +73,9 @@
           var streetPath = new google.maps.Polyline({
             path: latlngs,
             geodesic: true,
-            strokeColor: '#FF0000',
+            strokeColor: '#3EB1E4',
             strokeOpacity: 1.0,
-            strokeWeight: 2
+            strokeWeight: 8
           });
 
           streetPath.setMap(map);
@@ -115,7 +115,7 @@
                         url: 'http://nominatim.openstreetmap.org/search',
                         type: 'get',
                         data: {
-                            street: 'Ленина',
+                            street: 'площадь свободы',
                             city: 'Харьков',
                             country: 'Украина',
                             format: 'json',
