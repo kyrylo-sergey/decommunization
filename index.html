@@ -111,7 +111,6 @@
         }
 
         function codeAddress(address) {
-            console.log(address);
             $.ajax({
                         url: 'http://nominatim.openstreetmap.org/search',
                         type: 'get',
@@ -122,20 +121,12 @@
                             format: 'json',
                             polygon_geojson: 1
                         }
-                    })
-                    .done(function (data) {
-                        console.log('http://nominatim.openstreetmap.org/search?q=' + address + '&format=json&polygon_geojson=1');
-                        console.log(data);
-
+                    }).done(function (data) {
                         var coordinates = data.map(function(obj) { return obj.geojson.coordinates; });
-
-                        console.log(coordinates);
-
-                        $.each(coordinates, function (piece) {
-                            drawStreet(piece, map);
+                        coordinates.forEach(function(piece) {
+                          drawStreet(piece, map);
                         });
                     });
-
 
             /*geocoder.geocode( { 'address': address}, function(results, status) {
                 if (status == google.maps.GeocoderStatus.OK) {
