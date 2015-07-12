@@ -111,7 +111,33 @@
         }
 
         function codeAddress(address) {
-            geocoder.geocode( { 'address': address}, function(results, status) {
+            console.log(address);
+            $.ajax({
+                        url: 'http://nominatim.openstreetmap.org/search',
+                        type: 'get',
+                        data: {
+                            street: 'Ленина',
+                            city: 'Харьков',
+                            country: 'Украина',
+                            format: 'json',
+                            polygon_geojson: 1
+                        }
+                    })
+                    .done(function (data) {
+                        console.log('http://nominatim.openstreetmap.org/search?q=' + address + '&format=json&polygon_geojson=1');
+                        console.log(data);
+
+                        var coordinates = data.map(function(obj) { return obj.geojson.coordinates; });
+
+                        console.log(coordinates);
+
+                        $.each(coordinates, function (piece) {
+                            drawStreet(piece, map);
+                        });
+                    });
+
+
+            /*geocoder.geocode( { 'address': address}, function(results, status) {
                 if (status == google.maps.GeocoderStatus.OK) {
                     map.setCenter(results[0].geometry.location);
                     if (marker) { marker.setMap(null); }
@@ -141,7 +167,7 @@
                 } else {
                     alert("Geocode was not successful for the following reason: " + status);
                 }
-            });
+            });*/
         }
         google.maps.event.addDomListener(window, 'load', initialize);
     </script>
