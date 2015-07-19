@@ -7,247 +7,280 @@
 <html class="no-js lt-ie9" lang=""> <![endif]-->
 <!--[if gt IE 8]><!-->
 <html class="no-js" lang=""> <!--<![endif]-->
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="apple-touch-icon" href="apple-touch-icon.png">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
-        <link rel="stylesheet" href="css/bootstrap.min.css">
-        <style>
-         html, #map-canvas {
-             height: 100%;
-             margin: 0;
-             padding: 0;
-         }
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <style>
+        html, #map-canvas {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
 
-         body { height: 90%; }
-        </style>
-        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
-        <link rel="stylesheet" href="css/main.css">
+        body {
+            height: 90%;
+        }
+    </style>
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/main.css">
 
-        <!--[if lt IE 9]>
-        <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <script>window.html5 || document.write('<script src="js/vendor/html5shiv.js"><\/script>')</script>
-        <![endif]-->
-        <script type="text/javascript"
-                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBKSYeg17izEC5BS5TTcASixUrrfV2pTqA">
-        </script>
-        <script type="text/javascript">
-         var map, geocoder, marker, streetPath = null;
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <script>window.html5 || document.write('<script src="js/vendor/html5shiv.js"><\/script>')</script>
+    <![endif]-->
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBKSYeg17izEC5BS5TTcASixUrrfV2pTqA">
+    </script>
+    <script type="text/javascript">
+        var map, geocoder, marker, streetPath;
 
-         function renderStreets() {
-             var list = $('#list');
+        function renderStreets() {
+            var list = $('#list');
 
-             var append = function(name, ident,  type) {
-                 var item = $('<li>' + name + '</li>').on('click', function() {
-                     codeAddress(name, name + ', Харків, Харківська область');
-                 });
-                 item.data('ident', ident);
-                 item.data('type', type);
-                 list.find('#' + type + ' ul').append(item);
-             };
+            var append = function (name, ident, type) {
+                var item = $('<li>' + name + '</li>').on('click', function () {
+                    codeAddress(name, name + ', Харків, Харківська область');
+                });
+                item.data('ident', ident);
+                item.data('type', type);
+                list.find('#' + type + ' ul').append(item);
+            };
 
-             $.each(streets, function(idx, street) {
-                 var full = street.ukr_type + ' ' + street.ukr_name;
-                 append(full, full, 'streets');
-             });
-             $.each(districts, function(idx, distr) {
-                 append(distr.ukr_name + ' район', distr.ukr_name,  'districts');
-             });
-             $.each(metros, function(idx, m) {
-                 append('ст. м. ' + m.ukr_name, m.ukr_name, 'metros');
-             });
-             $.each(parks, function(idx, park) {
-                 append('парк ' + park.ukr_name, park.ukr_name, 'parks');
-             });
-         }
+            $.each(streets, function (idx, street) {
+                var full = street.ukr_type + ' ' + street.ukr_name;
+                append(full, full, 'streets');
+            });
+            $.each(districts, function (idx, distr) {
+                append(distr.ukr_name + ' район', distr.ukr_name, 'districts');
+            });
+            $.each(metros, function (idx, m) {
+                append('ст. м. ' + m.ukr_name, m.ukr_name, 'metros');
+            });
+            $.each(parks, function (idx, park) {
+                append('парк ' + park.ukr_name, park.ukr_name, 'parks');
+            });
+        }
 
-         function drawStreet(coordinates, map) {
-             var latlngs = coordinates.map(function(pair) {
-                 return new google.maps.LatLng(pair[1], pair[0]);
-             });
+        function drawStreetPiece(coordinates, map) {
+            var latlngs = coordinates.map(function (pair) {
+                return new google.maps.LatLng(pair[1], pair[0]);
+            });
 
-             streetPath = new google.maps.Polyline({
-                 path: latlngs,
-                 geodesic: true,
-                 strokeColor: '#CF19DB',
-                 strokeOpacity: 0.5,
-                 strokeWeight: 8
-             });
+            streetPath = new google.maps.Polyline({
+                path: latlngs,
+                geodesic: true,
+                strokeColor: '#CF19DB',
+                strokeOpacity: 0.5,
+                strokeWeight: 8
+            });
 
-             streetPath.setMap(map);
-         }
+            streetPath.setMap(map);
+        }
 
-         function removePath() {
-             if (streetPath) {
-                 streetPath.setMap(null);
-             }
-         }
+        function initialize() {
+            var description = $('#description');
+            var showDescription = function (ident, type) {
+                description.html('');
+                var d = $.grep(all[type], function (item) {
+                    if (item.ukr_name) {
+                        return (item.ukr_type + ' ' + item.ukr_name == ident)
+                                || item.ukr_name == ident;
+                    } else return false;
+                })[0];
+                description.html('<h3>Причина</h3><p class="well">' + d.description + '</p>');
+            };
 
-         function initialize() {
-             var description = $('#description');
-             var showDescription= function(ident, type) {
-                 description.html('');
-                 var d = $.grep(all[type], function(item) {
-                     if (item.ukr_name) {
-                         return (item.ukr_type + ' ' + item.ukr_name == ident)
-                             || item.ukr_name == ident;
-                     } else return false;
-                 })[0];
-                 description.html('<h3>Причина до перейменування</h3><p class="well">' + d.description + '</p>');
-             };
+            geocoder = new google.maps.Geocoder();
+            var mapOptions = {
+                center: {lat: 50.004444, lng: 36.231389},
+                zoom: 15
+            };
+            map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+            renderStreets();
 
-             geocoder = new google.maps.Geocoder();
-             var mapOptions = {
-                 center: {lat: 50.004444, lng: 36.231389},
-                 zoom: 15
-             };
-             map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-             renderStreets();
+            $('#list .tab-pane ul').on('click', 'li', function () {
+                $('#list .tab-pane ul li.selected').removeClass('selected');
+                $(this).addClass('selected');
+                showDescription($(this).data('ident'), $(this).data('type'));
+            });
+        }
 
-             $('#list .tab-pane ul').on('click', 'li', function() {
-                 $('#list .tab-pane ul li.selected').removeClass('selected');
-                 $(this).addClass('selected');
-                 showDescription($(this).data('ident'), $(this).data('type'));
-             });
-         }
+        function geocodeViaGoogle(address) {
+            return $.Deferred(function (dfd) {
+                geocoder.geocode({'address': address}, function (results, status) {
+                    if (status != google.maps.GeocoderStatus.OK) {
+                        console.log('Failed to load address data for ' + address + 'from Google. Reason: ' + status);
+                    }
+                    dfd.resolve(results[0]);
+                });
+            });
+        }
 
-         function codeAddress(address, full) {
-             $.ajax({
-                 url: 'http://nominatim.openstreetmap.org/search',
-                 type: 'get',
-                 data: {
-                     street: address.replace('вул.', 'ул'),
-                     city: 'Харьков',
-                     country: 'Украина',
-                     format: 'json',
-                     polygon_geojson: 1
-                 }
-             }).done(function (data) {
-                 if (data.length === 0) {
-                     console.log('No data from OSM service for ' + address);
-                 } else {
-                     var coordinates = data.filter(function(c) {
-                         return c.class === 'highway' && c.type === 'tertiary' || c.type === 'residential';
-                     }).map(function(street) {
-                         return street.geojson.coordinates;
-                     });
-                     var mergedCoords = [].concat.apply([], coordinates);
-                     removePath();
-                     drawStreet(mergedCoords, map);
-                 }
-             });
+        function geocodeViaOSM(address) {
+            return $.Deferred(function (dfd) {
+                $.ajax({
+                    url: 'http://nominatim.openstreetmap.org/search',
+                    type: 'get',
+                    data: {
+                        street: address.replace('вул.', 'ул'),
+                        city: 'Харьков',
+                        country: 'Украина',
+                        format: 'json',
+                        polygon_geojson: 1
+                    }
+                }).done(function (data, result) {
+                    if (!data.length || result != 'success') {
+                        console.log('Failed to get data from OSM service for ' + address + '. Result ' + result);
+                    }
+                    dfd.resolve(data);
+                });
+            });
+        }
 
-             geocoder.geocode( { 'address': full}, function(results, status) {
-                 if (status == google.maps.GeocoderStatus.OK) {
-                     map.setCenter(results[0].geometry.location);
-                     if (marker) { marker.setMap(null); }
+        function codeAddress(address, full) {
+            $.when(geocodeViaGoogle(full), geocodeViaOSM(address)).done(function (googleRes, OSMRes) {
+                var location = googleRes.geometry.location;
 
-                     var selectedTab = $('.nav-tabs').find('li.active a').attr('id');
-                     var markerIcon = null;
+                map.setCenter(location);
+                if (marker) {
+                    marker.setMap(null);
+                }
 
-                     switch(selectedTab) {
-                         case 'streets-tab':
-                             markerIcon = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png';
-                             break;
-                         case 'districts-tab':
-                             markerIcon = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
-                             break;
-                         case 'metro-tab':
-                             markerIcon = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
-                             break;
-                         case 'parks-tab':
-                             markerIcon = 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png';
-                             break;
-                     }
-                     marker = new google.maps.Marker({
-                         map: map,
-                         position: results[0].geometry.location,
-                         icon: markerIcon
-                     });
-                 } else {
-                     alert("Geocode was not successful for the following reason: " + status);
-                 }
-             });
-         }
-         google.maps.event.addDomListener(window, 'load', initialize);
-        </script>
-    </head>
-    <body style="padding-top: 70px">
-        <!--[if lt IE 8]>
-        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
-        your browser</a> to improve your experience.</p>
-        <![endif]-->
-        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-            <div class="container">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="/">
-                        <img src="img/anti-communism.png" id="ussr"><img src="img/ukraine.jpg" id="ukraine"> Декомунізація в Харкові
-                    </a>
-                </div>
-                <div id="navbar" class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li><a href="#" data-placement="bottom" data-toggle="popover"
-                               data-content="15 травня 2015 року президент України Петро Порошенко підписав <a href='http://zakon4.rada.gov.ua/laws/show/317-19'>закони, якими забороняється радянська символіка</a>.<br/><br/><a href='https://www.facebook.com/groups/704786309633508/'>Харківська топонімічна група</a> діючи у рамках цих законів запропонувала список топонімів міста Харкова, які підлягають зміні.<br/><br/>На цьому сайті приведений повний список запропонованих змін.">
-                            Про проект</a></li>
-                        <li><a href="#" data-placement="bottom" data-toggle="popover" data-content="Автори проекту: <a href='http://vk.com/id11662509'>Сергій Перерва</a> та <a href='http://kyrylo.org'>Кирило Сілін</a>.<br/><br/>Автори не несуть відповідальності за список топонімів, запропонованих до по зміни.<br/><br/>Цей <a href='https://github.com/kyrylo-sergey/decommunization'>проект</a> є проектом з відкритим програмним забезпеченням.">Автори</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+                var selectedTab = $('.nav-tabs').find('li.active a').attr('id');
+                var markerIcon = null;
 
-        <div class="container map">
-            <div class="col-md-4" style="height: 100%;">
-                <div class="row" style="height: 50%;">
-                    <div id="list">
-                        <ul class="nav nav-tabs" role="tablist">
-                            <li role="presentation" class="active"><a href="#streets" id="streets-tab" aria-controls="streets" role="tab" data-toggle="tab">Вулиці</a></li>
-                            <li role="presentation"><a href="#districts" id="districts-tab" aria-controls="disctricts" role="tab" data-toggle="tab">Райони</a></li>
-                            <li role="presentation"><a href="#metros" id="metro-tab" aria-controls="metros" role="tab" data-toggle="tab">Метро</a></li>
-                            <li role="presentation"><a href="#parks" id="parks-tab" aria-controls="parks" role="tab" data-toggle="tab">Парки</a></li>
-                        </ul>
-                        <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane active" id="streets"><ul></ul></div>
-                            <div role="tabpanel" class="tab-pane" id="districts"><ul></ul></div>
-                            <div role="tabpanel" class="tab-pane" id="metros"><ul></ul></div>
-                            <div role="tabpanel" class="tab-pane" id="parks"><ul></ul></div>
-                        </div>
+                switch (selectedTab) {
+                    case 'streets-tab':
+                        markerIcon = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png';
+                        break;
+                    case 'districts-tab':
+                        markerIcon = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
+                        break;
+                    case 'metro-tab':
+                        markerIcon = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+                        break;
+                    case 'parks-tab':
+                        markerIcon = 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png';
+                        break;
+                }
+                marker = new google.maps.Marker({
+                    map: map,
+                    position: location,
+                    icon: markerIcon
+                });
+
+                var coordinates = OSMRes.map(function (obj) {
+                    return obj.geojson.coordinates;
+                });
+
+                if (streetPath !== undefined) {
+                    streetPath.setMap(null);
+                }
+
+                if (!coordinates.length) {
+                    console.log('No data from OSM service for ' + address);
+                }
+                coordinates.forEach(function (piece) {
+                    drawStreetPiece(piece, map);
+                });
+            });
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+</head>
+<body style="padding-top: 70px">
+<!--[if lt IE 8]>
+<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
+    your browser</a> to improve your experience.</p>
+<![endif]-->
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">
+                <img src="img/anti-communism.png" id="ussr"><img src="img/ukraine.jpg" id="ukraine"> Декомунізація в
+                Харкові
+            </a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="#" data-placement="bottom" data-toggle="popover"
+                       data-content="15 травня 2015 року президент України Петро Порошенко підписав <a href='http://zakon4.rada.gov.ua/laws/show/317-19'>закони, якими забороняється радянська символіка</a>.<br/><br/><a href='https://www.facebook.com/groups/704786309633508/'>Харківська топонімічна група</a> діючи у рамках цих законів запропонувала список топонімів міста Харкова, які підлягають зміні.<br/><br/>На цьому сайті приведений повний список запропонованих змін.">
+                    Про проект</a></li>
+                <li><a href="#" data-placement="bottom" data-toggle="popover"
+                       data-content="Автори проекту: <a href='http://vk.com/id11662509'>Сергій Перерва</a> та <a href='http://kyrylo.org'>Кирило Сілін</a>.<br/><br/>Автори не несуть відповідальності за список топонімів, запропонованих до по зміни.<br/><br/>Цей <a href='https://github.com/kyrylo-sergey/decommunization'>проект</a> є проектом з відкритим програмним забезпеченням.">Автори</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container map">
+    <div class="col-md-4" style="height: 100%;">
+        <div class="row" style="height: 50%;">
+            <div id="list">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#streets" id="streets-tab" aria-controls="streets"
+                                                              role="tab" data-toggle="tab">Вулиці</a></li>
+                    <li role="presentation"><a href="#districts" id="districts-tab" aria-controls="disctricts"
+                                               role="tab" data-toggle="tab">Райони</a></li>
+                    <li role="presentation"><a href="#metros" id="metro-tab" aria-controls="metros" role="tab"
+                                               data-toggle="tab">Метро</a></li>
+                    <li role="presentation"><a href="#parks" id="parks-tab" aria-controls="parks" role="tab"
+                                               data-toggle="tab">Парки</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="streets">
+                        <ul></ul>
                     </div>
-                </div>
-                <div class="row">
-                    <div id="description">
+                    <div role="tabpanel" class="tab-pane" id="districts">
+                        <ul></ul>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-8 map-col">
-                <div class="row map-row">
-                    <div id="map-container">
-                        <div id="map-canvas"></div>
+                    <div role="tabpanel" class="tab-pane" id="metros">
+                        <ul></ul>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="parks">
+                        <ul></ul>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- /container -->
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
-        <script>
-         $(function () {
-             $('[data-toggle="popover"]').popover({html: true})
-         });
+        <div class="row">
+            <div id="description">
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8 map-col">
+        <div class="row map-row">
+            <div id="map-container">
+                <div id="map-canvas"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /container -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
+<script>
+    $(function () {
+        $('[data-toggle="popover"]').popover({html: true})
+    });
 
-         $('body').on('click', function (e) {
-             if ($(e.target).data('toggle') !== 'popover'
-                 && $(e.target).parents('.popover.in').length === 0) {
-                     $('[data-toggle="popover"]').popover('hide');
-             }
-         });
-        </script>
+    $('body').on('click', function (e) {
+        if ($(e.target).data('toggle') !== 'popover'
+                && $(e.target).parents('.popover.in').length === 0) {
+            $('[data-toggle="popover"]').popover('hide');
+        }
+    });
+</script>
 
-        <script src="js/vendor/bootstrap.min.js"></script>
+<script src="js/vendor/bootstrap.min.js"></script>
 
-        <script src="js/main.js"></script>
-    </body>
+<script src="js/main.js"></script>
+</body>
 </html>
