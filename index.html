@@ -38,7 +38,7 @@
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBKSYeg17izEC5BS5TTcASixUrrfV2pTqA">
     </script>
     <script type="text/javascript">
-        var map, geocoder, marker, streetPath;
+        var map, geocoder, marker, streetPath, OSMCopyright = null;
 
         function renderStreets() {
             var list = $('#list');
@@ -109,6 +109,12 @@
                 $(this).addClass('selected');
                 showDescription($(this).data('ident'), $(this).data('type'));
             });
+
+            OSMCopyright = $('<div/>', {
+                id: 'map-copyright',
+                style: 'font-size: 11px; font-family: Arial, sans-serif; margin: 0 2px 2px 0; white-space: nowrap;'
+            });
+            map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(OSMCopyright.get(0));
         }
 
         function geocodeViaGoogle(address) {
@@ -137,6 +143,9 @@
                 }).done(function (data, result) {
                     if (!data.length || result != 'success') {
                         console.log('Failed to get data from OSM service for ' + address + '. Result ' + result);
+                        OSMCopyright.html("");
+                    } else {
+                        OSMCopyright.html('Street Location ' + data[0].licence);
                     }
                     dfd.resolve(data);
                 });
@@ -183,9 +192,6 @@
                     streetPath.setMap(null);
                 }
 
-                if (!coordinates.length) {
-                    console.log('No data from OSM service for ' + address);
-                }
                 coordinates.forEach(function (piece) {
                     drawStreetPiece(piece, map);
                 });
