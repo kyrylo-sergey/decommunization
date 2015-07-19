@@ -143,6 +143,8 @@ module Decommunisation
       {
         ukr_name: ukr_name,
         ukr_type: ukr_type,
+        rus_name: rus_name,
+        rus_type: rus_type,
         district: district,
         postcode: postcode,
         description: description
