@@ -2621,7 +2621,7 @@ function initialize() {
           || item.ukr_name == ident;
       } else return false;
     })[0];
-    description.html('<h3>Причина</h3><p class="well">' + d.description + '</p>');
+    description.html('<h3>Причина для перейменування</h3><p class="well">' + d.description + '</p>');
   };
 
   geocoder = new google.maps.Geocoder();
