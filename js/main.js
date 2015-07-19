@@ -2727,13 +2727,17 @@ function codeAddress(address, full) {
       if (c.osm_type === 'way' && c.class === 'highway') {
         if (/ровулок/.test(address)) {
           return / Lane/.test(c.display_name);
+        } else if (/'їзд/.test(address)) {
+          return / Entrance/.test(c.display_name);
         } else {
-          return !/ Lane/.test(c.display_name);
+          return !/ Lane/.test(c.display_name) && !/ Entrance/.test(c.display_name);
         }
       }
+      return false;
     }).map(function(street) {
       return street.geojson.coordinates;
     });
+
     var mergedCoords = [].concat.apply([], coordinates);
     removePath();
     drawStreet(mergedCoords, map);
