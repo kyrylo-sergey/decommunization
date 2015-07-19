@@ -2734,7 +2734,7 @@ function codeAddress(address, full) {
     });
 
     var coordinates = OSMRes.filter(function(c) {
-      if (c.osm_type === 'way' && c.class === 'highway') {
+      if (c.osm_type === 'way' && c.class === 'highway' && c.type !== 'secondary') {
         if (/ровулок/.test(address)) {
           return / Lane/.test(c.display_name);
         } else if (/'їзд/.test(address)) {
