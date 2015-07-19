@@ -73,7 +73,7 @@
             });
         }
 
-        function drawStreetPiece(coordinates, map) {
+        function drawStreet(coordinates, map) {
             var latlngs = coordinates.map(function (pair) {
                 return new google.maps.LatLng(pair[1], pair[0]);
             });
@@ -159,6 +159,12 @@
             });
         }
 
+        function removePath() {
+            if (streetPath) {
+                streetPath.setMap(null);
+            }
+        }
+
         function codeAddress(address, full) {
             $.when(geocodeViaGoogle(full), geocodeViaOSM(address)).done(function (googleRes, OSMRes) {
                 var location = googleRes.geometry.location;
@@ -191,17 +197,14 @@
                     icon: markerIcon
                 });
 
-                var coordinates = OSMRes.map(function (obj) {
-                    return obj.geojson.coordinates;
+                var coordinates = OSMRes.filter(function(c) {
+                    return c.class === 'highway' && c.type === 'tertiary' || c.type === 'residential';
+                }).map(function(street) {
+                    return street.geojson.coordinates;
                 });
-
-                if (streetPath !== undefined) {
-                    streetPath.setMap(null);
-                }
-
-                coordinates.forEach(function (piece) {
-                    drawStreetPiece(piece, map);
-                });
+                var mergedCoords = [].concat.apply([], coordinates);
+                removePath();
+                drawStreet(mergedCoords, map);
             });
         }
         google.maps.event.addDomListener(window, 'load', initialize);
