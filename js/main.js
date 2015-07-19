@@ -2729,12 +2729,16 @@ function codeAddress(address, full) {
           return / Lane/.test(c.display_name);
         } else if (/'їзд/.test(address)) {
           return / Entrance/.test(c.display_name);
+        } else if (/роспект/.test(address)) {
+          return / Avenue/.test(c.display_name);
         } else {
-          return !/ Lane/.test(c.display_name) && !/ Entrance/.test(c.display_name);
+          return !/ Lane/.test(c.display_name) && !/ Entrance/.test(c.display_name) && !/ Avenue/.test(c.display_name);
         }
       }
       return false;
-    }).map(function(street) {
+    });
+
+    coordinates = coordinates.map(function(street) {
       return street.geojson.coordinates;
     });
 
