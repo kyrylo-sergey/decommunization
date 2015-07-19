@@ -2734,11 +2734,12 @@ function codeAddress(address, full) {
           } else {
             return / Entrance/.test(c.display_name);
           }
-
         } else if (/роспект/.test(address)) {
           return / Avenue/.test(c.display_name);
+        } else if (/шосе /.test(address) && c.type !== 'residential') {
+          return / Road/.test(c.display_name);
         } else {
-          return !/ Lane/.test(c.display_name) && !/ Entrance/.test(c.display_name) && !/ Avenue/.test(c.display_name);
+          return !/ Lane/.test(c.display_name) && !/ Entrance/.test(c.display_name) && !/ Avenue/.test(c.display_name) && !/ Road/.test(c.display_name);
         }
       }
       return false;
