@@ -2681,6 +2681,52 @@ function geocodeViaOSM(address) {
   });
 }
 
+function geocodeViaOSM2(data) {
+  console.log(data);
+  return $.Deferred(function (dfd) {
+    $.ajax({
+      url: 'http://nominatim.openstreetmap.org/search',
+      type: 'get',
+      data: {
+        street: data.address.road,
+        city: data.address.city,
+        country: data.address.country,
+        postalcode: data.address.postcode,
+        format: 'json',
+        polygon_geojson: 1
+      }
+    }).done(function (data, result) {
+      if (!data.length || result != 'success') {
+        console.log('Failed to get data from OSM service for ' + data + '. Result ' + result);
+        OSMCopyright.html("");
+      } else {
+        OSMCopyright.html('Street Location ' + data[0].licence);
+      }
+      dfd.resolve(data);
+    });
+  });
+}
+
+function geocodeViaOSMCoordinates(coordinates)
+{
+  coordinates = [coordinates.A, coordinates.F];
+  return $.Deferred(function (dfd) {
+    $.ajax({
+      url: 'http://nominatim.openstreetmap.org/reverse',
+      type: 'get',
+      data: {
+        lat: coordinates[0],
+        lon: coordinates[1],
+        'accept-language': 'uk',
+        format: 'json',
+        osm_type: 'W'
+      }
+    }).done(function (data, result) {
+      dfd.resolve(data);
+    });
+  });
+}
+
 function removePath() {
   if (streetPath) {
     streetPath.setMap(null);
@@ -2692,55 +2738,61 @@ function isFloat(n){
 }
 
 function codeAddress(address, full) {
-  $.when(geocodeViaGoogle(full), geocodeViaOSM(address)).done(function (googleRes, OSMRes) {
+  $.when(geocodeViaGoogle(full)).done(function (googleRes) {
     var location = googleRes.geometry.location;
 
-    map.setCenter(location);
-    if (marker) {
-      marker.setMap(null);
-    }
+    $.when(geocodeViaOSMCoordinates(location)).done(function(data){
+      console.log(data);
+      $.when(geocodeViaOSM2(data)).done(function(OSMRes){
+        map.setCenter(location);
 
-    var selectedTab = $('.nav-tabs').find('li.active a').attr('id');
-    var markerIcon = null;
-
-    switch (selectedTab) {
-    case 'streets-tab':
-      markerIcon = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png';
-      break;
-    case 'districts-tab':
-      markerIcon = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
-      break;
-    case 'metro-tab':
-      markerIcon = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
-      break;
-    case 'parks-tab':
-      markerIcon = 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png';
-      break;
-    }
-    marker = new google.maps.Marker({
-      map: map,
-      position: location,
-      icon: markerIcon
-    });
-
-    var coordinates = OSMRes.filter(function(c) {
-      if (c.osm_type === 'way' && c.class === 'highway') {
-        if (/ровулок/.test(address)) {
-          return / Lane/.test(c.display_name);
-        } else if (/'їзд/.test(address)) {
-          return / Entrance/.test(c.display_name);
-        } else {
-          return !/ Lane/.test(c.display_name) && !/ Entrance/.test(c.display_name);
+        if (marker) {
+          marker.setMap(null);
         }
-      }
-      return false;
-    }).map(function(street) {
-      return street.geojson.coordinates;
-    });
 
-    var mergedCoords = [].concat.apply([], coordinates);
-    removePath();
-    drawStreet(mergedCoords, map);
+        var selectedTab = $('.nav-tabs').find('li.active a').attr('id');
+        var markerIcon = null;
+
+        switch (selectedTab) {
+          case 'streets-tab':
+            markerIcon = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png';
+            break;
+          case 'districts-tab':
+            markerIcon = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
+            break;
+          case 'metro-tab':
+            markerIcon = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+            break;
+          case 'parks-tab':
+            markerIcon = 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png';
+            break;
+        }
+        marker = new google.maps.Marker({
+          map: map,
+          position: location,
+          icon: markerIcon
+        });
+
+        var coordinates = OSMRes./*filter(function(c) {
+          if (c.osm_type === 'way' && c.class === 'highway') {
+            if (/ровулок/.test(address)) {
+              return / Lane/.test(c.display_name);
+            } else if (/'їзд/.test(address)) {
+              return / Entrance/.test(c.display_name);
+            } else {
+              return !/ Lane/.test(c.display_name) && !/ Entrance/.test(c.display_name);
+            }
+          }
+          return false;
+        }).*/map(function(street) {
+          return street.geojson.coordinates;
+        });
+
+        var mergedCoords = [].concat.apply([], coordinates);
+        removePath();
+        drawStreet(mergedCoords, map);
+      });
+    });
   });
 }
 google.maps.event.addDomListener(window, 'load', initialize);
