@@ -2728,7 +2728,13 @@ function codeAddress(address, full) {
         if (/ровулок/.test(address)) {
           return / Lane/.test(c.display_name);
         } else if (/'їзд/.test(address)) {
-          return / Entrance/.test(c.display_name);
+          var m;
+          if ((m = /(\d-)i/.exec(c.display_name))) {
+            return address.indexOf(m[1]) > -1;
+          } else {
+            return / Entrance/.test(c.display_name);
+          }
+
         } else if (/роспект/.test(address)) {
           return / Avenue/.test(c.display_name);
         } else {
