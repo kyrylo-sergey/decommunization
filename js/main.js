@@ -2562,11 +2562,16 @@ var all = {'streets': streets, 'districts': districts, 'metros': metros, 'parks'
 
 var map, geocoder, marker, streetPath, OSMCopyright = null;
 
+var communicating = false;
+
 function renderStreets() {
   var list = $('#list');
 
   var append = function (name, ident, type, rus) {
     var item = $('<li>' + name + '</li>').on('click', function () {
+      if (communicating) {
+        return false;
+      }
       var replaced = name
             .replace('пров.', 'провулок')
             .replace('в-д', 'в\'їзд')
@@ -2692,7 +2697,12 @@ function isFloat(n){
 }
 
 function codeAddress(address, full) {
-  $.when(geocodeViaGoogle(full), geocodeViaOSM(address)).done(function (googleRes, OSMRes) {
+  communicating = true;
+  $.when(geocodeViaGoogle(full), geocodeViaOSM(address))
+    .always(function(){
+      communicating = false;
+    })
+    .done(function (googleRes, OSMRes) {
     var location = googleRes.geometry.location;
 
     map.setCenter(location);
