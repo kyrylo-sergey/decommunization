@@ -43,9 +43,15 @@
         function renderStreets() {
             var list = $('#list');
 
-            var append = function (name, ident, type) {
+            var append = function (name, ident, type, rus) {
                 var item = $('<li>' + name + '</li>').on('click', function () {
-                    codeAddress(name, name + ', Харків, Харківська область');
+                    var replaced = name
+                            .replace('пров.', 'провулок')
+                            .replace('в-д', 'в\'їзд')
+                            .replace('пр-д', 'проїзд')
+                            .replace('вул.', 'вулиця')
+                            .replace('просп.', 'проспект');
+                    codeAddress(replaced, name + ', Харків, Харківська область');
                 });
                 item.data('ident', ident);
                 item.data('type', type);
@@ -54,16 +60,16 @@
 
             $.each(streets, function (idx, street) {
                 var full = street.ukr_type + ' ' + street.ukr_name;
-                append(full, full, 'streets');
+                append(full, full, 'streets', street.rus_name + ' ' + street.rus_type);
             });
             $.each(districts, function (idx, distr) {
-                append(distr.ukr_name + ' район', distr.ukr_name, 'districts');
+                append(distr.ukr_name + ' район', distr.ukr_name, 'districts', distr.rus_name + ' ' + distr.rus_type);
             });
             $.each(metros, function (idx, m) {
-                append('ст. м. ' + m.ukr_name, m.ukr_name, 'metros');
+                append('ст. м. ' + m.ukr_name, m.ukr_name, 'metros', m.rus_name + ' ' + m.rus_type);
             });
             $.each(parks, function (idx, park) {
-                append('парк ' + park.ukr_name, park.ukr_name, 'parks');
+                append('парк ' + park.ukr_name, park.ukr_name, 'parks', park.rus_name + ' ' + park.rus_type);
             });
         }
 
@@ -134,13 +140,14 @@
                     url: 'http://nominatim.openstreetmap.org/search',
                     type: 'get',
                     data: {
-                        street: address.replace('вул.', 'ул'),
+                        street: address,
                         city: 'Харьков',
                         country: 'Украина',
                         format: 'json',
                         polygon_geojson: 1
                     }
                 }).done(function (data, result) {
+                    console.log(address);
                     if (!data.length || result != 'success') {
                         console.log('Failed to get data from OSM service for ' + address + '. Result ' + result);
                         OSMCopyright.html("");
