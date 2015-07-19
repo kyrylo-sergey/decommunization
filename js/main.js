@@ -2484,78 +2484,259 @@ var streets = [
 ];
 
 var districts = [
-    {
-        "ukr_name": "Дзержинський",
-        "description": "Фелікс Едмундович Дзержинський (1877 — 1926) (Залізний Фелікс) — радянський політичний діяч, один із засновників Всеросійської надзвичайної комісії (ВЧК) та організаторів «червоного терору» в Радянській Росії та на захоплених Червоною армією територіях."
-    },
-    {
-        "ukr_name": "Жовтневий",
-        "description": "Назва на честь Жовтневого збройного перевороту 25 жовтня (7 листопада)1917 року"
-    },
-    {
-        "ukr_name": "Комінтернівський",
-        "description": "Комуністичний інтернаціонал (Комінтерн, Третій інтернаціонал) - міжнародна організація комуністичних партій, яка керувалась Кремлем і знаходилась під повним контролем Іноземного Відділу НКВС. Заснована 1919 року в Москві за ініціативи В. І. Леніна, який оголосив «мертвим» Другий інтернаціонал після початку Першої світової війни 1914 року. Розпущений Й. Сталіним у 1943 р."
-    },
-    {
-        "ukr_name": "Ленінський",
-        "description": "Володимир Ілліч Ульянов (Ленін) - засновник радянської держави та комуністичної партії РСДРП -РКП(б) - ВКП(б) - КПРС. Один з організаторів Жовтневого збройного перевороту 1917 року, громадянської війни та червоного терору"
-    },
-    {
-        "ukr_name": "Московський",
-        "description": "В 1938 р. у Харкові створено Кагановицький та Сталінський райони, названі на честь очільниківвсесоюзної та республіканської (української) партійних організацій Й. Сталіна та Л. Кагановича. Під час здійснення політики десталінізації та подолання наслідків культу особи Сталіна Кагановицький район став Київським (1957), а Сталінський - Московським (1961). Зв’язку головний більшовик СРСР - головний більшовик УРСР було замінено на Столиця СРСР - Столиця УРСР."
-    },
-    {
-        "ukr_name": "Орджонікідзевський",
-        "description": "Орджонікідзе Григорій Костянтонович (Серго Орджонікідзе) (1886 —1937) — радянський державний і партійний діяч. 1-й секретар Закавказького крайкому РКП(б); з вересня 1926 року — 1-й секретар Північно- Кавказького крайкому РКП(б), нарком робітничо- селянської інспекції і заступником голови Раднаркому СРСР. З 1930 року голова Вищої ради народного господарства (ВРНГ СРСР) та член Політбюро ЦК ВКП(б)."
-    },
-    {
-        "ukr_name": "Фрунзенський",
-        "description": "Фрунзе Михайло Васильович (1885-1925) — радянський військовий діяч, революціонер, один з воєначальників у Червоній Армії під час Громадянської війни. Голова Реввійськради СРСР, нарком з військових і морських справ (1925). Керував розгромом Повстанської армії Нестора Махна (за що в 1924 нагороджений другим орденом Червоного Прапора) і загону Юрія Тютюнника. Брав участь у встановленнірадянської влади в Україні."
-    },
-    {
-        "ukr_name": "Червонозаводський",
-        "description": "Радянська державна та партійна символіка"
-    }
+  {
+    "ukr_name": "Дзержинський",
+    "description": "Фелікс Едмундович Дзержинський (1877 — 1926) (Залізний Фелікс) — радянський політичний діяч, один із засновників Всеросійської надзвичайної комісії (ВЧК) та організаторів «червоного терору» в Радянській Росії та на захоплених Червоною армією територіях."
+  },
+  {
+    "ukr_name": "Жовтневий",
+    "description": "Назва на честь Жовтневого збройного перевороту 25 жовтня (7 листопада)1917 року"
+  },
+  {
+    "ukr_name": "Комінтернівський",
+    "description": "Комуністичний інтернаціонал (Комінтерн, Третій інтернаціонал) - міжнародна організація комуністичних партій, яка керувалась Кремлем і знаходилась під повним контролем Іноземного Відділу НКВС. Заснована 1919 року в Москві за ініціативи В. І. Леніна, який оголосив «мертвим» Другий інтернаціонал після початку Першої світової війни 1914 року. Розпущений Й. Сталіним у 1943 р."
+  },
+  {
+    "ukr_name": "Ленінський",
+    "description": "Володимир Ілліч Ульянов (Ленін) - засновник радянської держави та комуністичної партії РСДРП -РКП(б) - ВКП(б) - КПРС. Один з організаторів Жовтневого збройного перевороту 1917 року, громадянської війни та червоного терору"
+  },
+  {
+    "ukr_name": "Московський",
+    "description": "В 1938 р. у Харкові створено Кагановицький та Сталінський райони, названі на честь очільниківвсесоюзної та республіканської (української) партійних організацій Й. Сталіна та Л. Кагановича. Під час здійснення політики десталінізації та подолання наслідків культу особи Сталіна Кагановицький район став Київським (1957), а Сталінський - Московським (1961). Зв’язку головний більшовик СРСР - головний більшовик УРСР було замінено на Столиця СРСР - Столиця УРСР."
+  },
+  {
+    "ukr_name": "Орджонікідзевський",
+    "description": "Орджонікідзе Григорій Костянтонович (Серго Орджонікідзе) (1886 —1937) — радянський державний і партійний діяч. 1-й секретар Закавказького крайкому РКП(б); з вересня 1926 року — 1-й секретар Північно- Кавказького крайкому РКП(б), нарком робітничо- селянської інспекції і заступником голови Раднаркому СРСР. З 1930 року голова Вищої ради народного господарства (ВРНГ СРСР) та член Політбюро ЦК ВКП(б)."
+  },
+  {
+    "ukr_name": "Фрунзенський",
+    "description": "Фрунзе Михайло Васильович (1885-1925) — радянський військовий діяч, революціонер, один з воєначальників у Червоній Армії під час Громадянської війни. Голова Реввійськради СРСР, нарком з військових і морських справ (1925). Керував розгромом Повстанської армії Нестора Махна (за що в 1924 нагороджений другим орденом Червоного Прапора) і загону Юрія Тютюнника. Брав участь у встановленнірадянської влади в Україні."
+  },
+  {
+    "ukr_name": "Червонозаводський",
+    "description": "Радянська державна та партійна символіка"
+  }
 ];
 var metros = [
-    {
-        "ukr_name": "Пролетарська",
-        "description": "Радянська державна та партійна символіка"
-    },
-    {
-        "ukr_name": "Радянська",
-        "description": "Радянська державна та партійна символіка"
-    },
-    {
-        "ukr_name": "Радянської армії",
-        "description": "Радянська державна та партійна символіка"
-    }
+  {
+    "ukr_name": "Пролетарська",
+    "description": "Радянська державна та партійна символіка"
+  },
+  {
+    "ukr_name": "Радянська",
+    "description": "Радянська державна та партійна символіка"
+  },
+  {
+    "ukr_name": "Радянської армії",
+    "description": "Радянська державна та партійна символіка"
+  }
 ];
 var parks = [
-    {
-        "ukr_name": "ім. Артема",
-        "ukr_type": "парк",
-        "district": "Комінтернівський",
-        "description": "Артем (Федір Андрійович Сергеєв) (1883-1921) - радянський партійний та державний діяч, голова Раднаркому Донецько-Криворізької Радянської Республіки (1918), заступник голови і нарком радянської пропаганди Тимчасового робітничо-селянського уряду України (1918-1919), голова Донецького губвиконкому (1920), учасник встановлення радянської влади в Україні."
-    },
-    {
-        "ukr_name": "Жовтневий гідропарк",
-        "ukr_type": "парк",
-        "district": "Жовтневий",
-        "description": "Назва на честь Жовтневого збройного перевороту 25 жовтня (7 листопада) 1917 року"
-    },
-    {
-        "ukr_name": "Піонерський парк",
-        "ukr_type": "парк",
-        "district": "Червонозаводський",
-        "description": "Піонери - учасники масового дитячого комуністичного руху в СРСР, який мав на меті виховання дітей у відданості ідеалам комуністичної партії, радянської держави та її вождям."
-    },
-    {
-        "ukr_name": "Радянської України",
-        "ukr_type": "сквер",
-        "district": "Орджонікідзевський",
-        "description": "Радянська державна та партійна символіка"
-    }
+  {
+    "ukr_name": "ім. Артема",
+    "ukr_type": "парк",
+    "district": "Комінтернівський",
+    "description": "Артем (Федір Андрійович Сергеєв) (1883-1921) - радянський партійний та державний діяч, голова Раднаркому Донецько-Криворізької Радянської Республіки (1918), заступник голови і нарком радянської пропаганди Тимчасового робітничо-селянського уряду України (1918-1919), голова Донецького губвиконкому (1920), учасник встановлення радянської влади в Україні."
+  },
+  {
+    "ukr_name": "Жовтневий гідропарк",
+    "ukr_type": "парк",
+    "district": "Жовтневий",
+    "description": "Назва на честь Жовтневого збройного перевороту 25 жовтня (7 листопада) 1917 року"
+  },
+  {
+    "ukr_name": "Піонерський парк",
+    "ukr_type": "парк",
+    "district": "Червонозаводський",
+    "description": "Піонери - учасники масового дитячого комуністичного руху в СРСР, який мав на меті виховання дітей у відданості ідеалам комуністичної партії, радянської держави та її вождям."
+  },
+  {
+    "ukr_name": "Радянської України",
+    "ukr_type": "сквер",
+    "district": "Орджонікідзевський",
+    "description": "Радянська державна та партійна символіка"
+  }
 ];
 
 var all = {'streets': streets, 'districts': districts, 'metros': metros, 'parks': parks};
+
+var map, geocoder, marker, streetPath, OSMCopyright = null;
+
+function renderStreets() {
+  var list = $('#list');
+
+  var append = function (name, ident, type, rus) {
+    var item = $('<li>' + name + '</li>').on('click', function () {
+      var replaced = name
+            .replace('пров.', 'провулок')
+            .replace('в-д', 'в\'їзд')
+            .replace('пр-д', 'проїзд')
+            .replace('вул.', 'вулиця')
+            .replace('просп.', 'проспект');
+      codeAddress(replaced, name + ', Харків, Харківська область');
+    });
+    item.data('ident', ident);
+    item.data('type', type);
+    list.find('#' + type + ' ul').append(item);
+  };
+
+  $.each(streets, function (idx, street) {
+    var full = street.ukr_type + ' ' + street.ukr_name;
+    append(full, full, 'streets', street.rus_name + ' ' + street.rus_type);
+  });
+  $.each(districts, function (idx, distr) {
+    append(distr.ukr_name + ' район', distr.ukr_name, 'districts', distr.rus_name + ' ' + distr.rus_type);
+  });
+  $.each(metros, function (idx, m) {
+    append('ст. м. ' + m.ukr_name, m.ukr_name, 'metros', m.rus_name + ' ' + m.rus_type);
+  });
+  $.each(parks, function (idx, park) {
+    append('парк ' + park.ukr_name, park.ukr_name, 'parks', park.rus_name + ' ' + park.rus_type);
+  });
+}
+
+function drawStreet(coordinates, map) {
+  var latlngs = coordinates.map(function(pair) {
+    return new google.maps.LatLng(pair[1], pair[0]);
+  });
+
+  streetPath = new google.maps.Polyline({
+    path: latlngs,
+    geodesic: true,
+    strokeColor: '#CF19DB',
+    strokeOpacity: 0.5,
+    strokeWeight: 8
+  });
+
+  streetPath.setMap(map);
+}
+
+function initialize() {
+  var description = $('#description');
+  var showDescription = function (ident, type) {
+    description.html('');
+    var d = $.grep(all[type], function (item) {
+      if (item.ukr_name) {
+        return (item.ukr_type + ' ' + item.ukr_name == ident)
+          || item.ukr_name == ident;
+      } else return false;
+    })[0];
+    description.html('<h3>Причина</h3><p class="well">' + d.description + '</p>');
+  };
+
+  geocoder = new google.maps.Geocoder();
+  var mapOptions = {
+    center: {lat: 50.004444, lng: 36.231389},
+    zoom: 15
+  };
+  map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+  renderStreets();
+
+  $('#list .tab-pane ul').on('click', 'li', function () {
+    $('#list .tab-pane ul li.selected').removeClass('selected');
+    $(this).addClass('selected');
+    showDescription($(this).data('ident'), $(this).data('type'));
+  });
+
+  OSMCopyright = $('<div/>', {
+    id: 'map-copyright',
+    style: 'font-size: 11px; font-family: Arial, sans-serif; margin: 0 2px 2px 0; white-space: nowrap;'
+  });
+  map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(OSMCopyright.get(0));
+}
+
+function geocodeViaGoogle(address) {
+  return $.Deferred(function (dfd) {
+    geocoder.geocode({'address': address}, function (results, status) {
+      if (status != google.maps.GeocoderStatus.OK) {
+        console.log('Failed to load address data for ' + address + 'from Google. Reason: ' + status);
+      }
+      dfd.resolve(results[0]);
+    });
+  });
+}
+
+function geocodeViaOSM(address) {
+  return $.Deferred(function (dfd) {
+    $.ajax({
+      url: 'http://nominatim.openstreetmap.org/search',
+      type: 'get',
+      data: {
+        street: address,
+        city: 'Харьков',
+        country: 'Украина',
+        format: 'json',
+        polygon_geojson: 1
+      }
+    }).done(function (data, result) {
+      console.log(address);
+      if (!data.length || result != 'success') {
+        console.log('Failed to get data from OSM service for ' + address + '. Result ' + result);
+        OSMCopyright.html("");
+      } else {
+        OSMCopyright.html('Street Location ' + data[0].licence);
+      }
+      dfd.resolve(data);
+    });
+  });
+}
+
+function removePath() {
+  if (streetPath) {
+    streetPath.setMap(null);
+  }
+}
+
+function isFloat(n){
+  return n === Number(n) && n%1 !== 0;
+}
+
+function codeAddress(address, full) {
+  $.when(geocodeViaGoogle(full), geocodeViaOSM(address)).done(function (googleRes, OSMRes) {
+    var location = googleRes.geometry.location;
+
+    map.setCenter(location);
+    if (marker) {
+      marker.setMap(null);
+    }
+
+    var selectedTab = $('.nav-tabs').find('li.active a').attr('id');
+    var markerIcon = null;
+
+    switch (selectedTab) {
+    case 'streets-tab':
+      markerIcon = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png';
+      break;
+    case 'districts-tab':
+      markerIcon = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
+      break;
+    case 'metro-tab':
+      markerIcon = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+      break;
+    case 'parks-tab':
+      markerIcon = 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png';
+      break;
+    }
+    marker = new google.maps.Marker({
+      map: map,
+      position: location,
+      icon: markerIcon
+    });
+
+    var coordinates = OSMRes.filter(function(c) {
+      if (c.osm_type === 'way' && c.class === 'highway') {
+        if (/ровулок/.test(address)) {
+          return / Lane/.test(c.display_name);
+        } else {
+          return !/ Lane/.test(c.display_name);
+        }
+      }
+    }).map(function(street) {
+      return street.geojson.coordinates;
+    });
+    var mergedCoords = [].concat.apply([], coordinates);
+    removePath();
+    drawStreet(mergedCoords, map);
+  });
+}
+google.maps.event.addDomListener(window, 'load', initialize);
