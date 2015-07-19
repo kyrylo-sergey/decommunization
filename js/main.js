@@ -2692,10 +2692,6 @@ function removePath() {
   }
 }
 
-function isFloat(n){
-  return n === Number(n) && n%1 !== 0;
-}
-
 function codeAddress(address, full) {
   communicating = true;
   $.when(geocodeViaGoogle(full), geocodeViaOSM(address))
