@@ -1,5 +1,6 @@
 
-var map, geocoder, marker, streetPath, OSMCopyright = null;
+var map, geocoder, marker, OSMCopyright = null;
+var streetPaths = [];
 
 var communicating = false;
 
@@ -44,7 +45,7 @@ function drawStreet(coordinates, map) {
     return new google.maps.LatLng(pair[1], pair[0]);
   });
 
-  streetPath = new google.maps.Polyline({
+  var path = new google.maps.Polyline({
     path: latlngs,
     geodesic: true,
     strokeColor: '#CF19DB',
@@ -52,7 +53,9 @@ function drawStreet(coordinates, map) {
     strokeWeight: 8
   });
 
-  streetPath.setMap(map);
+  streetPaths.push(path);
+
+  path.setMap(map);
 }
 
 function initialize() {
@@ -113,7 +116,6 @@ function geocodeViaOSM(address) {
         polygon_geojson: 1
       }
     }).done(function (data, result) {
-      console.log(address);
       if (!data.length || result != 'success') {
         console.log('Failed to get data from OSM service for ' + address + '. Result ' + result);
         OSMCopyright.html("");
@@ -125,10 +127,11 @@ function geocodeViaOSM(address) {
   });
 }
 
-function removePath() {
-  if (streetPath) {
-    streetPath.setMap(null);
-  }
+function removePaths() {
+  streetPaths.forEach(function(path) {
+    path.setMap(null);
+  });
+  streetPaths = [];
 }
 
 function codeAddress(address, full) {
@@ -195,8 +198,10 @@ function codeAddress(address, full) {
     });
 
     var mergedCoords = [].concat.apply([], coordinates);
-    removePath();
-    drawStreet(mergedCoords, map);
+      removePaths();
+      coordinates.forEach(function(el){
+        drawStreet(el, map);
+      });
   });
 }
 google.maps.event.addDomListener(window, 'load', initialize);
