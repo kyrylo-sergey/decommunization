@@ -141,67 +141,65 @@ function codeAddress(address, full) {
       communicating = false;
     })
     .done(function (googleRes, OSMRes) {
-    var location = googleRes.geometry.location;
+      var location = googleRes.geometry.location;
 
-    map.setCenter(location);
-    if (marker) {
-      marker.setMap(null);
-    }
-
-    var selectedTab = $('.nav-tabs').find('li.active a').attr('id');
-    var markerIcon = null;
-
-    switch (selectedTab) {
-    case 'streets-tab':
-      markerIcon = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png';
-      break;
-    case 'districts-tab':
-      markerIcon = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
-      break;
-    case 'metro-tab':
-      markerIcon = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
-      break;
-    case 'parks-tab':
-      markerIcon = 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png';
-      break;
-    }
-    marker = new google.maps.Marker({
-      map: map,
-      position: location,
-      icon: markerIcon
-    });
-
-    var coordinates = OSMRes.filter(function(c) {
-      if (c.osm_type === 'way' && c.class === 'highway' && c.type !== 'secondary') {
-        if (/ровулок/.test(address)) {
-          return / Lane/.test(c.display_name);
-        } else if (/'їзд/.test(address)) {
-          var m;
-          if ((m = /(\d-)i/.exec(c.display_name))) {
-            return address.indexOf(m[1]) > -1;
-          } else {
-            return / Entrance/.test(c.display_name);
-          }
-        } else if (/роспект/.test(address)) {
-          return / Avenue/.test(c.display_name);
-        } else if (/шосе /.test(address) && c.type !== 'residential') {
-          return / Road/.test(c.display_name);
-        } else {
-          return !/ Lane/.test(c.display_name) && !/ Entrance/.test(c.display_name) && !/ Avenue/.test(c.display_name) && !/ Road/.test(c.display_name);
-        }
+      map.setCenter(location);
+      if (marker) {
+        marker.setMap(null);
       }
-      return false;
-    });
 
-    coordinates = coordinates.map(function(street) {
-      return street.geojson.coordinates;
-    });
+      var selectedTab = $('.nav-tabs').find('li.active a').attr('id');
+      var markerIcon = null;
 
-    var mergedCoords = [].concat.apply([], coordinates);
+      switch (selectedTab) {
+        case 'streets-tab':
+          markerIcon = 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png';
+          break;
+        case 'districts-tab':
+          markerIcon = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
+          break;
+        case 'metro-tab':
+          markerIcon = 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+          break;
+        case 'parks-tab':
+          markerIcon = 'http://maps.google.com/mapfiles/ms/icons/purple-dot.png';
+          break;
+      }
+      marker = new google.maps.Marker({
+        map: map,
+        position: location,
+        icon: markerIcon
+      });
+
+      var coordinates = OSMRes.filter(function(c) {
+        if (c.osm_type === 'way' && c.class === 'highway' && c.type !== 'secondary') {
+          if (/ровулок/.test(address)) {
+            return / Lane/.test(c.display_name);
+          } else if (/'їзд/.test(address)) {
+            var m;
+            if ((m = /(\d-)i/.exec(c.display_name))) {
+              return address.indexOf(m[1]) > -1;
+            } else {
+              return / Entrance/.test(c.display_name);
+            }
+          } else if (/роспект/.test(address)) {
+            return / Avenue/.test(c.display_name);
+          } else if (/шосе /.test(address) && c.type !== 'residential') {
+            return / Road/.test(c.display_name);
+          } else {
+            return !/ Lane/.test(c.display_name) && !/ Entrance/.test(c.display_name) && !/ Avenue/.test(c.display_name) && !/ Road/.test(c.display_name);
+          }
+        }
+        return false;
+      });
+
+      coordinates = coordinates.map(function(street) {
+        return street.geojson.coordinates;
+      });
       removePaths();
       coordinates.forEach(function(el){
         drawStreet(el, map);
       });
-  });
+    });
 }
 google.maps.event.addDomListener(window, 'load', initialize);
